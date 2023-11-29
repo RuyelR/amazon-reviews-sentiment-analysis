@@ -16,9 +16,7 @@ import streamlit as st
 from streamlit.logger import get_logger
 
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
-from sklearn import svm
+
 
 LOGGER = get_logger(__name__)
 
@@ -39,15 +37,7 @@ def run():
         Machine Learning and Data Science projects.
         **👈 Select a demo from the sidebar** to see some examples
         of what Streamlit can do!
-        """
-        )
-    
-
-def example_ml():
-    X, y = datasets.load_iris(return_X_y=True)
-    # st.write("X and y shapes: ", X.shape,", ", y.shape)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=0)
-    return [X, y]
+        """)
 
 
 if __name__ == "__main__":
