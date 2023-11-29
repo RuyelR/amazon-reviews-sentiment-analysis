@@ -17,24 +17,26 @@ import time
 import numpy as np
 
 import streamlit as st
+from sklearn.model_selection import cross_val_score 
 from streamlit.hello.utils import show_code
-'''
-Accuracy, Precision, Recall, F1 Score: how well the model classifies sentiments
-Confusion Matrix: misclassifying sentiments and which sentiments are often confused
-Cross-Validation: robust and not overfitting.estimate the model's generalization performance.
-Statistical Significance Testing:differences in sentiment are statistically significant
-'''
+from Hello import *
+
+# Accuracy, Precision, Recall, F1 Score: how well the model classifies sentiments
+# Confusion Matrix: misclassifying sentiments and which sentiments are often confused
+# Cross-Validation: robust and not overfitting.estimate the model's generalization performance.
+# Statistical Significance Testing:differences in sentiment are statistically significant
 
 
-def confusion_matrix_eval():
+def confusion_matrix_eval(mainClassifier, X, y):
+    scores = cross_val_score(mainClassifier, X, y, cv=4)
+    st.write("%0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
 
-    pass
 
 def statistical_significance_eval():
     pass
 
 def cross_validation_eval():
-    
+
     pass
 
 def multi_metric_eval():
@@ -49,6 +51,15 @@ st.write(
 Streamlit. We're generating a bunch of random numbers in a loop for around
 5 seconds. Enjoy!"""
 )
+Xy_array = example_ml()
+Xy_array
 
+try:
+    confusion_matrix_eval()
+    statistical_significance_eval()
+    cross_validation_eval()
+    multi_metric_eval()
+except TypeError:
+    'Something went wrong!'
 
 # show_code()
