@@ -46,8 +46,7 @@ def cross_validation_eval(clf, X, y):
     cv_option=[2,3,4,5,6,]
     cv_pick = st.select_slider(label='Number of CV count',options=cv_option,value=4)
     scores = cross_val_score(clf, X, y, cv=cv_pick)
-    st.write("### :green[%0.2f] accuracy with a standard deviation of %0.2f"%(round_percent(scores.mean()), round_percent(scores.std())))
-
+    st.write(f"### :green[{round_percent(scores.mean())}%] accuracy with a standard deviation of :red[{scores.std():0.2f}]")
 
 def statistical_significance_eval():
     # here check if the difference between sentiment is significant (+, -, ~)
@@ -83,9 +82,10 @@ def multi_metric_eval(y_test, predictions):
     for title in data_df.columns.values:
         column_config[title] = st.column_config.ProgressColumn(
             title,
-            format="%f",
+            format="    %f",
             min_value=min_num[title]-10,
             max_value=100,
+            width='medium'
         )
 
     st.data_editor(
@@ -103,8 +103,9 @@ st.write(
     The Algorithms performance can be measured using the following qualitative metrics:
     """)
 st.write(    
-    "##### :orange[Accuracy, Precision, Recall, F1 Score, Cross-Validation, Confusion Matrix, and Statistical Significance Testing]"
+    "##### :rainbow[Accuracy, Precision, Recall, F1 Score, Cross-Validation, Confusion Matrix, and Statistical Significance Testing]"
 )
+
 
 try:
     cross_validation_eval(clf, X, y)
