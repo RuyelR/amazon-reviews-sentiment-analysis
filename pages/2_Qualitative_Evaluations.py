@@ -18,13 +18,12 @@ import altair as alt
 import pandas as pd
 
 import streamlit as st
-from streamlit.hello.utils import show_code
 
-"""
-Sentiment Distribution Plots: sentiment balance in datasheet
-Word_clouds: (+,-,~)catagory. prominent factors driving sentiment
-Topic Modeling: LDA to id key topics in each sentiment category
-"""
+
+# Sentiment Distribution Plots: sentiment balance in datasheet
+# Word_clouds: (+,-,~)catagory. prominent factors driving sentiment
+# Topic Modeling: LDA to id key topics in each sentiment category
+
 
 def sentiment_dist_plots():
     pass
@@ -36,13 +35,13 @@ def topic_modeling_eval():
     pass
 
 st.set_page_config(page_title="Qualitative Evaluations", page_icon="📊")
-st.markdown("# DataFrame Demo")
-st.sidebar.header("DataFrame Demo")
+st.markdown("# Qualitative Evaluations")
+st.sidebar.header("Qualitative Evaluations")
 st.write(
     """This demo shows how to use `st.write` to visualize Pandas DataFrames.
 (Data courtesy of the [UN Data Explorer](http://data.un.org/Explorer.aspx).)"""
 )
 
-data_frame_demo()
-
-show_code(data_frame_demo)
+sentiment_dist_plots()
+world_cloud_eval()
+topic_modeling_eval()
