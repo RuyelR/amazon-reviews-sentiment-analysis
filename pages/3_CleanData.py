@@ -16,6 +16,8 @@ import pandas as pd
 import streamlit as st
 from sklearn.model_selection import train_test_split
 from nltk import word_tokenize
+from wordcloud import STOPWORDS
+from transformers import pipeline
 # Use Reviews_250.csv and NLTK to get a cleaned dataset 
 # Tokenize and stem the words
 # Save the dataset for other python files to use
@@ -29,10 +31,26 @@ def read_file():
         st.write("Longest review: ", max(len_review), "characters", sep=" ")
         st.write("Shortest review: ", min(len_review), "characters", sep=" ")
 
+    # Stopwords
+    my_stopwords = set(STOPWORDS)
+    cstpwds = st.text_input(label="Custom stopwords: ", value="", max_chars=50, help='Write the words comma seperated', placeholder="film, movie, cinema, theatre, ...")
+    if cstpwds:
+        custom_stopwords = list(cstpwds.split(', '))
+        st.write(custom_stopwords)
+        my_stopwords.update(custom_stopwords)
+    
+    sentiment_pipeline = pipeline("sentiment-analysis")
+    data = ["I love you", "I hate you"]
+    sentiment_pipeline(data)
+
+
+
+
     # Tokenization
     word_tokens = [word_tokenize(review) for review in data_df.Text]
     cleaned_tokens = [[word for word in item if word.isalpha()] for item in word_tokens]
-    len(cleaned_tokens)
+    st.write(len(cleaned_tokens))
+    # st.write(cleaned_tokens[6])
 
 
 
