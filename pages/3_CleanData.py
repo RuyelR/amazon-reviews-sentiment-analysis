@@ -12,46 +12,63 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
 import pandas as pd
 import streamlit as st
-from sklearn.model_selection import train_test_split
 from nltk import word_tokenize
 from wordcloud import STOPWORDS
 from transformers import pipeline
+from utils import show_code
+
+
 # Use Reviews_250.csv and NLTK to get a cleaned dataset 
 # Tokenize and stem the words
 # Save the dataset for other python files to use
 
 data_df = pd.read_csv('pages/Reviews_250.csv')
-def read_file():
-    st.write(data_df.Score.value_counts())
-    len_review = data_df.Text.str.len()
+sentiment_pipeline = pipeline("sentiment-analysis")
 
+def clean_data():
+    stats()
+    test_sentiment()
+
+
+def stopwords():
+    # Stopwords
+    my_stopwords = set(STOPWORDS)
+    custom_input = st.text_input(label="Custom stopwords: ", value="", max_chars=50, help='Write the words comma seperated', placeholder="film, movie, cinema, theatre, ...")
+    if custom_input:
+        custom_stopwords = list(custom_input.split(', '))
+        st.write(custom_stopwords)
+        my_stopwords.update(custom_stopwords)
+    return my_stopwords
+
+def tokenization():
+    # Tokenization
+    word_tokens = [word_tokenize(review) for review in data_df.Text]
+    cleaned_tokens = [[word for word in item if word.isalpha()] for item in word_tokens]
+    # cleaned_tokens has all the text tokenized
+    st.write(f"All reviews has been tokenzied. Number of texts tokenized: {len(cleaned_tokens)}")
+    # st.write("Example: ", cleaned_tokens[random.randint(0,len(cleaned_tokens))])
+    return cleaned_tokens
+
+def stats():
+    len_review = data_df.Text.str.len()
     if st.toggle(label="Longest vs Shortest review", value=False):
         st.write("Longest review: ", max(len_review), "characters", sep=" ")
         st.write("Shortest review: ", min(len_review), "characters", sep=" ")
 
-    # Stopwords
-    my_stopwords = set(STOPWORDS)
-    cstpwds = st.text_input(label="Custom stopwords: ", value="", max_chars=50, help='Write the words comma seperated', placeholder="film, movie, cinema, theatre, ...")
-    if cstpwds:
-        custom_stopwords = list(cstpwds.split(', '))
-        st.write(custom_stopwords)
-        my_stopwords.update(custom_stopwords)
-    
-    sentiment_pipeline = pipeline("sentiment-analysis")
-    data = ["I love you", "I hate you"]
-    sentiment_pipeline(data)
-
-
-
-
-    # Tokenization
-    word_tokens = [word_tokenize(review) for review in data_df.Text]
-    cleaned_tokens = [[word for word in item if word.isalpha()] for item in word_tokens]
-    st.write(len(cleaned_tokens))
-    # st.write(cleaned_tokens[6])
-
+def test_sentiment():
+    var = 4
+    # random.randint(0, len(data_df))
+    reivew = data_df.Text.iloc[var]
+    st.write(reivew)
+    st.write(sentiment_pipeline(reivew))
+    seperator = ' '
+    cleaned_tokens = tokenization()
+    reivew_token = seperator.join(cleaned_tokens[var])
+    st.write(reivew_token)
+    st.write(sentiment_pipeline(reivew_token))
 
 
 st.set_page_config(page_title="Clean Data", page_icon="📊")
@@ -65,4 +82,4 @@ st.write(
 # st.write(    
 #     "##### :rainbow[Sentiment Distribution Plot, Word Cloud, Topic Modeling]"
 # )
-read_file()
+clean_data()
