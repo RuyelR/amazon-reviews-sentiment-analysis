@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
 import pandas as pd
 import streamlit as st
 from nltk import word_tokenize
@@ -29,8 +28,12 @@ data_df = pd.read_csv('pages/Reviews_250.csv')
 sentiment_pipeline = pipeline("sentiment-analysis")
 
 def clean_data():
-    stats()
+    show_code(stopwords, 'Stopwords')
+    show_code(tokenization, 'Tokenization')
+    show_code(dataset_stats, 'Dataset Stats')
+    show_code(test_sentiment, 'Sentiment Test')
     test_sentiment()
+    dataset_stats()
 
 
 def stopwords():
@@ -52,15 +55,25 @@ def tokenization():
     # st.write("Example: ", cleaned_tokens[random.randint(0,len(cleaned_tokens))])
     return cleaned_tokens
 
-def stats():
+def dataset_stats():
+    # Quick Stats
     len_review = data_df.Text.str.len()
-    if st.toggle(label="Longest vs Shortest review", value=False):
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header("Stats: ")
+        st.write("Number of reviews: ", len(data_df))
         st.write("Longest review: ", max(len_review), "characters", sep=" ")
         st.write("Shortest review: ", min(len_review), "characters", sep=" ")
+        st.write("All reviews are in: English")
+        
+    with col2:
+        st.write("Number of reviews per stars: ")
+        st.write(data_df.Stars.value_counts())
+    
 
 def test_sentiment():
     var = 4
-    # random.randint(0, len(data_df))
     reivew = data_df.Text.iloc[var]
     st.write(reivew)
     st.write(sentiment_pipeline(reivew))
