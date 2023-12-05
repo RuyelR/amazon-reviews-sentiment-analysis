@@ -15,17 +15,24 @@
 import pandas as pd
 import streamlit as st
 from sklearn.model_selection import train_test_split
-
+from nltk import word_tokenize
 # Use Reviews_250.csv and NLTK to get a cleaned dataset 
 # Tokenize and stem the words
 # Save the dataset for other python files to use
 
-data_df = pd.read_csv('Reviews_250.csv')
-data_df.value_counts()
+data_df = pd.read_csv('pages/Reviews_250.csv')
+def read_file():
+    st.write(data_df.Score.value_counts())
+    len_review = data_df.Text.str.len()
 
+    if st.toggle(label="Longest vs Shortest review", value=False):
+        st.write("Longest review: ", max(len_review), "characters", sep=" ")
+        st.write("Shortest review: ", min(len_review), "characters", sep=" ")
 
-
-
+    # Tokenization
+    word_tokens = [word_tokenize(review) for review in data_df.Text]
+    cleaned_tokens = [[word for word in item if word.isalpha()] for item in word_tokens]
+    len(cleaned_tokens)
 
 
 
@@ -40,3 +47,4 @@ st.write(
 # st.write(    
 #     "##### :rainbow[Sentiment Distribution Plot, Word Cloud, Topic Modeling]"
 # )
+read_file()
