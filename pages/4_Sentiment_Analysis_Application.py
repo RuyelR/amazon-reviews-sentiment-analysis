@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import streamlit as st
-from CleanData import tokenization, stopwords
+from pages.Data_Cleaning_Process import tokenization, stopwords
 
 
 def sa_application():

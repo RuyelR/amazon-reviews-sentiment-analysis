@@ -21,13 +21,15 @@ from utils import show_code
 
 
 # Use Reviews_250.csv and NLTK to get a cleaned dataset 
-# Tokenize and stem the words
-# Save the dataset for other python files to use
+# Word Tokenize/Sentence Tokenize/2 word tokenize etc.
+# Stopword collection
+# Stemming the tokens
 
 data_df = pd.read_csv('pages/Reviews_250.csv')
 sentiment_pipeline = pipeline("sentiment-analysis")
 
 def clean_data():
+
     show_code(stopwords, 'Stopwords')
     show_code(tokenization, 'Tokenization')
     show_code(dataset_stats, 'Dataset Stats')
@@ -65,7 +67,7 @@ def dataset_stats():
         st.write("Number of reviews: ", len(data_df))
         st.write("Longest review: ", max(len_review), "characters", sep=" ")
         st.write("Shortest review: ", min(len_review), "characters", sep=" ")
-        st.write("All reviews are in: English")
+        st.write("All reviews are in: :blue[English]")
         
     with col2:
         st.write("Number of reviews per stars: ")
@@ -84,15 +86,12 @@ def test_sentiment():
     st.write(sentiment_pipeline(reivew_token))
 
 
-# st.set_page_config(page_title="Clean Data", page_icon="📊")
-# st.markdown("# :green[Clean Data]")
-# st.sidebar.header("Clean Data")
-# st.write(
-#     """
-#     This demo illustrates the process of cleaning the data. 
-#     """
-# )
-# st.write(    
-#     "##### :rainbow[Sentiment Distribution Plot, Word Cloud, Topic Modeling]"
-# )
-# clean_data()
+st.set_page_config(page_title="Data cleaning process", page_icon=":shark:")
+st.markdown("# :green[Data cleaning process]")
+st.sidebar.header("Data cleaning process")
+st.write(
+    """
+    This page illustrates the process of cleaning the data. 
+    """
+)
+clean_data()
