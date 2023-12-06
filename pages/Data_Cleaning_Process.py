@@ -30,7 +30,9 @@ data_df = pd.read_csv('pages/Reviews_250.csv')
 # bring in sentiment-analysis pretrained model from huggingface
 sentiment_pipeline = pipeline("sentiment-analysis")
 
-def clean_data():
+cleaned_tokens = pd.read_csv('pages/tokens.csv')
+
+def data_processing():
 
     show_code(stopwords, 'Stopwords')
     show_code(tokenization, 'Tokenization')
@@ -42,11 +44,11 @@ def clean_data():
             min_value=0, max_value=250,
             value=4, help="Enter an integer index from 0 - 250 to check that review's sentiment"
             )
-    # cleantokens = clean_tokens()
+    ###     Create new token.csv
+    # pd.DataFrame(clean_tokens()).to_csv(path_or_buf='/workspaces/amazon-reviews-sentiment-analysis/pages/tokens.csv',index=False)
+    ###
     # st.success(f"All reviews has been tokenzied.")
-    # st.write(cleantokens[test_num])
     test_sentiment(test_num)
-        
     # dataset_stats()
 
 def stopwords():
@@ -109,8 +111,10 @@ def test_sentiment(var = 4):
     st.subheader("Tokenized output: ")
     st.write("removed anything that doesn't contain alpha-numeric values.")
     st.write(typical_test)
-    cleaned_tokens = clean_tokens()
-    reivew_token = ' '.join(cleaned_tokens[var])
+    # since cleaned_token is now csv with text in cell and None in empty cells
+    # below: i drop None values from row[var] and change to list. Then its joined back into str. 
+    cl_tk_list = cleaned_tokens.iloc[var].dropna().to_list()
+    reivew_token = ' '.join(cl_tk_list)
     st.subheader("Cleaned output: ")
     st.write('All words were tokenized, then lemmatized, and finally stopwords were removed.')
     st.write(reivew_token)
@@ -133,7 +137,7 @@ st.write(
 custom_input = st.text_input(
 label="Custom stopwords: ", 
 max_chars=50, help='Write the words comma seperated', 
-placeholder="film, movie, cinema, theatre, ...", key="Demo 1"
+placeholder="film, movie, cinema, theatre, ...",
 )
 
-clean_data()
+data_processing()
