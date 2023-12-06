@@ -13,7 +13,6 @@
 # limitations under the License.
 import pandas as pd
 import streamlit as st
-from pages.Data_Cleaning_Process import tokenization, stopwords
 from transformers import pipeline
 
 # read csv for pandas dataframe
@@ -21,15 +20,31 @@ data_df = pd.read_csv('pages/Reviews_250.csv')
 # bring in sentiment-analysis pretrained model from huggingface
 sentiment_pipeline = pipeline("sentiment-analysis")
 
+cleaned_tokens = pd.read_csv('pages/tokens.csv')
 
 def sa_application():
-    all_tokens = tokenization()
-    my_stopwords = stopwords()
-    # clean_tokens = [[word for word in text_tokens if word not in my_stopwords] for text_tokens in all_tokens]
-    # st.write(clean_tokens[58])
+    create_label('dataframe')
+
+def create_label(choice):
+    if choice is 'dataframe':
+        df_labels = []
+        for text in data_df.Text[25:30].values:
+            X = sentiment_pipeline(text)
+            df_labels.append(X[0]['label'])
+        st.write(df_labels[:])
+    elif choice is 'token':
+        tk_sentences = []
+        for i in range(len(cleaned_tokens)):
+            temp_list = cleaned_tokens.iloc[i].dropna().to_list()
+            temp_sentence = ' '.join(temp_list)
+            tk_sentences.append(temp_sentence)
+        predictions = sentiment_pipeline(tk_sentences)
+        tk_labels = [prediction['label'] for prediction in predictions]
+        st.write(tk_labels[1:4])
 
 
-
+def text_sentiment():
+    pass
     
 
 st.set_page_config(page_title="Sentiment Analysis Application", page_icon="📈")
