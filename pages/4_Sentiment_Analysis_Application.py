@@ -11,16 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pandas as pd
 import streamlit as st
 from pages.Data_Cleaning_Process import tokenization, stopwords
+from transformers import pipeline
+
+# read csv for pandas dataframe
+data_df = pd.read_csv('pages/Reviews_250.csv')
+# bring in sentiment-analysis pretrained model from huggingface
+sentiment_pipeline = pipeline("sentiment-analysis")
 
 
 def sa_application():
     all_tokens = tokenization()
     my_stopwords = stopwords()
-    clean_tokens = [[word for word in text_tokens if word not in my_stopwords] for text_tokens in all_tokens]
-    st.write(clean_tokens[58])
+    # clean_tokens = [[word for word in text_tokens if word not in my_stopwords] for text_tokens in all_tokens]
+    # st.write(clean_tokens[58])
+
+
 
     
 
