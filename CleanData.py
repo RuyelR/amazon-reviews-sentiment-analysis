@@ -42,8 +42,8 @@ def stopwords():
     custom_input = st.text_input(label="Custom stopwords: ", value="", max_chars=50, help='Write the words comma seperated', placeholder="film, movie, cinema, theatre, ...")
     if custom_input:
         custom_stopwords = list(custom_input.split(', '))
-        st.write(custom_stopwords)
         my_stopwords.update(custom_stopwords)
+        st.write(custom_stopwords)
     return my_stopwords
 
 def tokenization():
@@ -84,15 +84,15 @@ def test_sentiment():
     st.write(sentiment_pipeline(reivew_token))
 
 
-st.set_page_config(page_title="Clean Data", page_icon="📊")
-st.markdown("# :green[Clean Data]")
-st.sidebar.header("Clean Data")
-st.write(
-    """
-    This demo illustrates the process of cleaning the data. 
-    """
-)
+# st.set_page_config(page_title="Clean Data", page_icon="📊")
+# st.markdown("# :green[Clean Data]")
+# st.sidebar.header("Clean Data")
+# st.write(
+#     """
+#     This demo illustrates the process of cleaning the data. 
+#     """
+# )
 # st.write(    
 #     "##### :rainbow[Sentiment Distribution Plot, Word Cloud, Topic Modeling]"
 # )
-clean_data()
+# clean_data()

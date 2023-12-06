@@ -115,4 +115,3 @@ try:
 except TypeError:
     st.error('Something went wrong!')
 
-# show_code()
