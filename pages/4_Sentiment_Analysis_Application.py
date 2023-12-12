@@ -88,6 +88,14 @@ def product_review_stats(picked=None, product_dict=None):
             '### Ratio is: '+ f':{color}[{ratio:.2f}]  positive reviews per negative review'
 
 
+def wordcloud_tagging():
+    # Build a word cloud generator from all the comments
+    pass
+
+
+def single_review_analysis():
+    # Build a word cloud generator from all the comments
+    pass
 
 
 def find_product_indeces():
