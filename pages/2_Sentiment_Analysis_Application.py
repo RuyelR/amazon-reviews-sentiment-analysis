@@ -13,7 +13,11 @@
 # limitations under the License.
 import datetime as dt
 import pandas as pd
+import numpy as np
 import streamlit as st
+import matplotlib.pyplot as plt
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from transformers import pipeline
 
 # read csv for pandas dataframe
@@ -32,8 +36,7 @@ def sa_application():
     f'There are :green[{len(pick_options)}] products.'
     picked = st.radio(label='Pick a product ID', options=pick_options, horizontal=True)
     product_review_stats(picked, product_dict)
-    
-    
+    wordcloud_tagging(picked, product_dict)
     pass
 
 # Don't use create_label(). Bulk operation causes 100% CPU usage, then fails.
@@ -88,8 +91,41 @@ def product_review_stats(picked=None, product_dict=None):
             '### Ratio is: '+ f':{color}[{ratio:.2f}]  positive reviews per negative review'
 
 
-def wordcloud_tagging():
+def wordcloud_tagging(picked=None, product_dict=None):
     # Build a word cloud generator from all the comments
+    start, end = product_dict[picked]
+    st.header("Tags from wordcloud: ")
+    # Create one long text from all reviews
+    text = data_df.loc[start:end, 'Text']
+    text = ''.join([sent for sent in text])
+    # Form stopwords list for the wordcloud to use
+    stopwords = set(STOPWORDS)
+    custom_input = 'br, will'
+    custom_stopwords = list(custom_input.split(', '))
+    stopwords.update(custom_stopwords)
+    # Extract image as array
+    prime_boxes = np.array(Image.open('pages/prime-boxes.png'))
+    # Wordcloud generation
+    wordcloud = WordCloud(
+        background_color='white',
+        mask=prime_boxes,
+        stopwords=stopwords,
+        max_words=200, margin=10,
+        random_state=1,
+        ).generate(text)
+    
+    image_colors = ImageColorGenerator(image=prime_boxes,default_color=(200,10,100))
+    image_colors2 = wordcloud.random_color_func()
+    # st.write(image_colors.image)
+    fig, axes = plt.subplots(1, 2)
+    axes[0].imshow(wordcloud, interpolation="bilinear", )
+    # # recolor wordcloud and show
+    # # we could also give color_func=image_colors directly in the constructor
+    axes[1].imshow(wordcloud.recolor(color_func=image_colors2), interpolation="bilinear")
+    for ax in axes:
+        ax.axis('off')
+    st.pyplot(fig=fig,use_container_width=True)
+    # st.image(image=wordcloud.to_image(), caption="Word Cloud from Dataset Reviews", use_column_width=True)
     pass
 
 

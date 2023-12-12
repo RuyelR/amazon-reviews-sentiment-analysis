@@ -38,7 +38,7 @@ text = open('/workspaces/amazon-reviews-sentiment-analysis/pages/randomtext.txt'
 def sentiment_dist_plots():
     pass
 
-def world_cloud_eval(text):
+def word_cloud_eval(text):
     st.header("Word Cloud: ")
     st.write("""
              Word clouds can demonstrate prominent factors that are driving a 
@@ -48,12 +48,12 @@ def world_cloud_eval(text):
     wc_stopwords = set(STOPWORDS)
     # Set list needs set to update so use []
     wc_stopwords.update(['yet', 'sentiments'])
-    worldcloud = WordCloud(
+    wordcloud = WordCloud(
         max_words=50, margin=10,
         random_state=1, stopwords=wc_stopwords,
         ).generate(text)
-    # worldcloud.stopwords
-    st.image(image=worldcloud.to_image(), caption="Word Cloud from User Review", use_column_width=True)
+    # wordcloud.stopwords
+    st.image(image=wordcloud.to_image(), caption="Word Cloud from User Review", use_column_width=True)
 
 def topic_modeling_eval():
     pass
@@ -72,5 +72,5 @@ st.write(
 )
 
 sentiment_dist_plots()
-world_cloud_eval(text)
+word_cloud_eval(text)
 topic_modeling_eval()
