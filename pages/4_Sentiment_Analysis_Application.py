@@ -25,8 +25,14 @@ cleaned_tokens = pd.read_csv('pages/tokens.csv')
 def sa_application():
     user_text_app()
     product_review_stats()
+    st.header("Sentiment analysis from Amazon Reviews")
     product_indices = find_product_indeces()
-
+    pick_options = list(product_indices.keys())
+    f'There are :green[{len(pick_options)}] products.'
+    st.radio(label='Pick a product ID', options=pick_options, horizontal=True)
+    
+    
+    
     pass
 
 # Don't use create_label(). Bulk operation causes 100% CPU usage, then fails.
@@ -51,10 +57,8 @@ def user_text_app():
     
 
 def product_review_stats():
-    num__of_product = len(data_df.ProductId.value_counts())
-    f'There are :green[{num__of_product}] products.'
+
     X = data_df.ProductId.value_counts()
-    X
     pass
 
 def find_product_indeces():
