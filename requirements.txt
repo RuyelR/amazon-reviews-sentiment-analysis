@@ -6,3 +6,7 @@ streamlit
 scikit-learn
 matplotlib
 wordcloud
+nltk
+transformers
+tensorflow
+torch

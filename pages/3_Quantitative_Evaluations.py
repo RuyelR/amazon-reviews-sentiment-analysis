@@ -70,9 +70,6 @@ def multi_metric_eval(y_test, predictions):
         data['F1'].append(F1score)
         data['Precision'].append(precision)
         data['Recall'].append(recall)
-        # st.write("### Precision score for ", param,": ", round(precision*100 , 3)) # Closer to 1(100) is better
-        # st.write("### F1 score for ", param,": ", round(F1score*100 , 3)) # Closer to 1(100) is better
-        # st.write("### Recall score for ", param,": ", round(recall*100 , 3)) # Closer to 1(100) is better
     
     st.write("#### F1 score, Precision score, and Recall score \n by different avarage parameter: micro, macro, weighted ")
     data_df = pd.DataFrame(data=data, index=avarage_param)
@@ -115,4 +112,3 @@ try:
 except TypeError:
     st.error('Something went wrong!')
 
-# show_code()
