@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import datetime as dt
 import pandas as pd
 import streamlit as st
 from transformers import pipeline
@@ -25,12 +26,12 @@ cleaned_tokens = pd.read_csv('pages/tokens.csv')
 def sa_application():
     user_text_app()
     product_review_stats()
-    st.header("Sentiment analysis from Amazon Reviews")
-    product_indices = find_product_indeces()
-    pick_options = list(product_indices.keys())
+    st.header("Sentiment analysis from Amazon customer reviews")
+    product_dict = find_product_indeces()
+    pick_options = list(product_dict.keys())
     f'There are :green[{len(pick_options)}] products.'
-    st.radio(label='Pick a product ID', options=pick_options, horizontal=True)
-    
+    picked = st.radio(label='Pick a product ID', options=pick_options, horizontal=True)
+    product_review_stats(picked, product_dict)
     
     
     pass
@@ -56,10 +57,38 @@ def user_text_app():
     custom_df = st.dataframe(data=sentiment_pipeline(review_txt), use_container_width=True)
     
 
-def product_review_stats():
+def product_review_stats(picked=None, product_dict=None):
+    if picked:
+        start, end = product_dict[picked]
+        col1, col2 = st.columns(2)
+        with col1:
+            st.header(picked)
+            average_stars = round(data_df.loc[start:end, 'Score'].mean())
+            median_stars = round(data_df.loc[start:end, 'Score'].median())
+            ':star:'* average_stars + f'  {average_stars} / 5 stars on avarage'
+            ':star:'* median_stars + f'  {median_stars} / 5 stars in median'
+            median_comment_time = round(data_df.loc[start:end, 'Time'].median())
+            # Turning epoch time to timestamp
+            '## Comment date in median'
+            dt_median = dt.datetime.fromtimestamp(median_comment_time)
+            f'### Date: {dt_median.month} / {dt_median.day} / {dt_median.year}'
+            # f'Time: {dt_median.hour} hour : {dt_median.minute} min : {dt_median.second} sec'
 
-    X = data_df.ProductId.value_counts()
-    pass
+        with col2:
+            st.write('## Sentiment count')
+            labels = data_df.loc[start:end, 'Label'].value_counts()
+            st.dataframe(labels, use_container_width=True)
+            ratio = labels['POSITIVE'] / labels['NEGATIVE']
+            if ratio >2:
+                color = 'green'
+            elif ratio >1:
+                color = 'orange'
+            else:
+                color = 'red'
+            '### Ratio is: '+ f':{color}[{ratio:.2f}]  positive reviews per negative review'
+
+
+
 
 def find_product_indeces():
     # Create a dictionary of product name and indices
