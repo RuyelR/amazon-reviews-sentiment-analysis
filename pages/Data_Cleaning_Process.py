@@ -127,11 +127,11 @@ def test_sentiment(var = 4):
     # below: i drop None values from row[var] and change to list. Then its joined back into str. 
     
     cl_tk_list = cleaned_tokens.iloc[var].dropna().to_list()
-    reivew_token = ' '.join(cl_tk_list)
+    review_token = ' '.join(cl_tk_list)
     st.subheader(":green[Cleaned output:] ")
     st.write(':green[All words were tokenized, then lemmatized, and finally stopwords were removed.]')
-    st.write(reivew_token)
-    Y = sentiment_pipeline(reivew_token)
+    st.write(review_token)
+    Y = sentiment_pipeline(review_token)
     st.write(Y)
     score_tk =  Y[0]['score']
     st.metric('Confidence score difference', value=score_tk, delta=score_tk-score_non_tk)

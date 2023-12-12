@@ -23,23 +23,36 @@ sentiment_pipeline = pipeline("sentiment-analysis")
 cleaned_tokens = pd.read_csv('pages/tokens.csv')
 
 def sa_application():
-    create_label('dataframe')
-
-def create_label(choice):
-
+    user_text_app()
     pass
 
+def create_label():
+    all_sentiments = []
+    for i in range(len(data_df)):
+        st.write(i)
+        cl_tk_list = cleaned_tokens.iloc[i].dropna().to_list()
+        review_tk_str = ' '.join(cl_tk_list)
+        label = sentiment_pipeline(review_tk_str)
+        all_sentiments.append(label[0]['label'])
+    data_df['Label'] = all_sentiments
+    data_df.to_csv('Reviews_2622.csv', index=False)
 
-def text_sentiment():
-    pass
+
+def user_text_app():
+    st.header('Sentiment analysis on custom review ')
+    review_txt = st.text_input('Write your review:', 'I love this product')
+    'Your Review:'
+    review_txt
+    custom_df = st.dataframe(data=sentiment_pipeline(review_txt), use_container_width=True)
     
 
 st.set_page_config(page_title="Sentiment Analysis Application", page_icon="📈")
 st.markdown("# :blue[Sentiment Analysis Application]")
 st.sidebar.header("Sentiment Analysis Application")
 st.write(
-    """This demo illustrates a combination of Quantitative Evaluations. 
-    The Algorithms performance can be measured using the following quantitative metrics:
+    """This illustrates our application in action. 
+    You can experience how the artificial intelligence model performs sentiment anlysis to hundreds of reviews using your own custom text.
+    You can also explore the models performance on the Amazon Reviews dataset. Using selected products and multiple reviews to choose from. 
     """)
 
 sa_application()
