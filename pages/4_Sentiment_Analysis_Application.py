@@ -16,7 +16,7 @@ import streamlit as st
 from transformers import pipeline
 
 # read csv for pandas dataframe
-data_df = pd.read_csv('pages/Reviews_250.csv')
+data_df = pd.read_csv('pages/Reviews_2622.csv')
 # bring in sentiment-analysis pretrained model from huggingface
 sentiment_pipeline = pipeline("sentiment-analysis")
 
@@ -26,21 +26,8 @@ def sa_application():
     create_label('dataframe')
 
 def create_label(choice):
-    if choice is 'dataframe':
-        df_labels = []
-        for text in data_df.Text[25:30].values:
-            X = sentiment_pipeline(text)
-            df_labels.append(X[0]['label'])
-        st.write(df_labels[:])
-    elif choice is 'token':
-        tk_sentences = []
-        for i in range(len(cleaned_tokens)):
-            temp_list = cleaned_tokens.iloc[i].dropna().to_list()
-            temp_sentence = ' '.join(temp_list)
-            tk_sentences.append(temp_sentence)
-        predictions = sentiment_pipeline(tk_sentences)
-        tk_labels = [prediction['label'] for prediction in predictions]
-        st.write(tk_labels[1:4])
+
+    pass
 
 
 def text_sentiment():

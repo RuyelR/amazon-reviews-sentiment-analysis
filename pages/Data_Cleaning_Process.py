@@ -26,30 +26,32 @@ from nltk.stem import WordNetLemmatizer
 # Stemming the tokens
 
 # read csv for pandas dataframe
-data_df = pd.read_csv('pages/Reviews_250.csv')
+data_df = pd.read_csv('pages/Reviews_2622.csv')
 # bring in sentiment-analysis pretrained model from huggingface
 sentiment_pipeline = pipeline("sentiment-analysis")
 
 cleaned_tokens = pd.read_csv('pages/tokens.csv')
 
 def data_processing():
+    # Shorten the texts down to 500 char for sentiment analysis limit, create tokens.csv
+    # data_df['Text'] = data_df['Text'].apply(shorten_text)
+    ###     Create new token.csv
+    # pd.DataFrame(clean_tokens()).to_csv(path_or_buf='/workspaces/amazon-reviews-sentiment-analysis/pages/tokens.csv',index=False)
+    ###
+
+    test_num = st.number_input(
+            label=f'Enter which review to check. Out of {len(data_df)}', 
+            min_value=0, max_value=len(data_df),
+            value=4, help="Enter an integer index from 0 - 250 to check that review's sentiment"
+            )
+    test_sentiment(test_num)
+    dataset_stats()
 
     show_code(stopwords, 'Stopwords')
     show_code(tokenization, 'Tokenization')
     show_code(dataset_stats, 'Dataset Stats')
     show_code(lemmatization, 'Lemmatization')
     show_code(test_sentiment, 'Sentiment Test')
-    test_num = st.number_input(
-            label='Enter which review to check. Out of 250', 
-            min_value=0, max_value=250,
-            value=4, help="Enter an integer index from 0 - 250 to check that review's sentiment"
-            )
-    ###     Create new token.csv
-    # pd.DataFrame(clean_tokens()).to_csv(path_or_buf='/workspaces/amazon-reviews-sentiment-analysis/pages/tokens.csv',index=False)
-    ###
-    # st.success(f"All reviews has been tokenzied.")
-    test_sentiment(test_num)
-    # dataset_stats()
 
 def stopwords():
     # Stopwords
@@ -59,6 +61,13 @@ def stopwords():
         my_stopwords.update(custom_stopwords)
         st.write(custom_stopwords)
     return my_stopwords
+
+def shorten_text(text):
+    # Reduces text size to under 500 length
+    if len(text) > 500:
+        return text[:500]
+    else:
+        return text
 
 def tokenization():
     # Tokenization
@@ -78,9 +87,11 @@ def clean_tokens():
     lemmatized_tokens = lemmatization(tokenization())
     my_bar = st.progress(value=0)
     clean_tokens=[]
+    size=(len(lemmatized_tokens)/100)
     for i, text_tokens in enumerate(lemmatized_tokens):
-        my_bar.progress(value=int(i//2.5))
+        my_bar.progress(value=int(i//size))
         clean_tokens.append([word for word in text_tokens if word not in stopwords_set])
+    st.success(body='Cleaned tokens have been created.')
     return clean_tokens
 
 def dataset_stats():
@@ -97,26 +108,28 @@ def dataset_stats():
         
     with col2:
         st.write("Number of reviews per stars: ")
-        st.write(data_df.Stars.value_counts())
+        st.write(data_df.Score.value_counts())
     
 def test_sentiment(var = 4):
     reivew = data_df.Text.iloc[var]
-    st.subheader('The review being tested:')
+    st.subheader(':violet[The base review being tested:]')
     st.write(reivew)
     X = sentiment_pipeline(reivew)
     st.write(X)
     score_non_tk =  X[0]['score']
     typical_tokens = tokenization()
     typical_test = ' '.join(typical_tokens[var])
-    st.subheader("Tokenized output: ")
-    st.write("removed anything that doesn't contain alpha-numeric values.")
+    st.subheader(":blue[Tokenized output:]")
+    st.write(":blue[Removed anything that doesn't contain alpha-numeric values.]")
     st.write(typical_test)
+    
     # since cleaned_token is now csv with text in cell and None in empty cells
     # below: i drop None values from row[var] and change to list. Then its joined back into str. 
+    
     cl_tk_list = cleaned_tokens.iloc[var].dropna().to_list()
     reivew_token = ' '.join(cl_tk_list)
-    st.subheader("Cleaned output: ")
-    st.write('All words were tokenized, then lemmatized, and finally stopwords were removed.')
+    st.subheader(":green[Cleaned output:] ")
+    st.write(':green[All words were tokenized, then lemmatized, and finally stopwords were removed.]')
     st.write(reivew_token)
     Y = sentiment_pipeline(reivew_token)
     st.write(Y)
