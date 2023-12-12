@@ -24,8 +24,12 @@ cleaned_tokens = pd.read_csv('pages/tokens.csv')
 
 def sa_application():
     user_text_app()
+    product_review_stats()
+    product_indices = find_product_indeces()
+
     pass
 
+# Don't use create_label(). Bulk operation causes 100% CPU usage, then fails.
 def create_label():
     all_sentiments = []
     for i in range(len(data_df)):
@@ -45,6 +49,25 @@ def user_text_app():
     review_txt
     custom_df = st.dataframe(data=sentiment_pipeline(review_txt), use_container_width=True)
     
+
+def product_review_stats():
+    num__of_product = len(data_df.ProductId.value_counts())
+    f'There are :green[{num__of_product}] products.'
+    X = data_df.ProductId.value_counts()
+    X
+    pass
+
+def find_product_indeces():
+    # Create a dictionary of product name and indices
+    product_ranges = {}
+    # iterate through unique IDs
+    for product_id in data_df['ProductId'].unique():
+        # using boolean masks to check if product IDs match. Then we make all index tolist
+        indices = data_df.index[data_df['ProductId'] == product_id].tolist()
+        if indices:
+            # use the first and last item in indices list and product_id to make a dict entry
+            product_ranges[product_id] = (indices[0], indices[-1])
+    return product_ranges
 
 st.set_page_config(page_title="Sentiment Analysis Application", page_icon="📈")
 st.markdown("# :blue[Sentiment Analysis Application]")
