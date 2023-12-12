@@ -72,13 +72,13 @@ def product_review_stats(picked=None, product_dict=None):
             ':star:'* median_stars + f'  {median_stars} / 5 stars in median'
             median_comment_time = round(data_df.loc[start:end, 'Time'].median())
             # Turning epoch time to timestamp
-            '## Comment date in median'
+            '### Comment date in median'
             dt_median = dt.datetime.fromtimestamp(median_comment_time)
             f'### Date: {dt_median.month} / {dt_median.day} / {dt_median.year}'
             # f'Time: {dt_median.hour} hour : {dt_median.minute} min : {dt_median.second} sec'
 
         with col2:
-            st.write('## Sentiment count')
+            st.write('## Sentiment analysis')
             labels = data_df.loc[start:end, 'Label'].value_counts()
             st.dataframe(labels, use_container_width=True)
             ratio = labels['POSITIVE'] / labels['NEGATIVE']
@@ -94,7 +94,7 @@ def product_review_stats(picked=None, product_dict=None):
 def wordcloud_tagging(picked=None, product_dict=None):
     # Build a word cloud generator from all the comments
     start, end = product_dict[picked]
-    st.header("Tags from wordcloud: ")
+    st.header("Wordcloud of all reviews: ")
     # Create one long text from all reviews
     text = data_df.loc[start:end, 'Text']
     text = ''.join([sent for sent in text])
@@ -104,33 +104,34 @@ def wordcloud_tagging(picked=None, product_dict=None):
     custom_stopwords = list(custom_input.split(', '))
     stopwords.update(custom_stopwords)
     # Extract image as array
-    prime_boxes = np.array(Image.open('pages/prime-boxes.png'))
+    prime_boxes = np.array(Image.open('pages/amazon-boxes.png'))
     # Wordcloud generation
-    wordcloud = WordCloud(
-        background_color='white',
+    rev_wordcloud = WordCloud(
+        background_color=(245, 242, 233),
         mask=prime_boxes,
         stopwords=stopwords,
-        max_words=200, margin=10,
-        random_state=1,
+        max_font_size=40,
+        max_words=2000, margin=10,
+        random_state=42,
         ).generate(text)
     
-    image_colors = ImageColorGenerator(image=prime_boxes,default_color=(200,10,100))
-    image_colors2 = wordcloud.random_color_func()
-    # st.write(image_colors.image)
-    fig, axes = plt.subplots(1, 2)
-    axes[0].imshow(wordcloud, interpolation="bilinear", )
-    # # recolor wordcloud and show
-    # # we could also give color_func=image_colors directly in the constructor
-    axes[1].imshow(wordcloud.recolor(color_func=image_colors2), interpolation="bilinear")
-    for ax in axes:
-        ax.axis('off')
+    image_colors = ImageColorGenerator(image=prime_boxes)
+    # Make the figure with color option given by the user or default.
+    fig, axes = plt.subplots()
+    if st.toggle(label='Color', help='Randomize color for clarity'):
+        axes.imshow(rev_wordcloud, interpolation="bilinear", )
+    else:
+        axes.imshow(rev_wordcloud.recolor(color_func=image_colors), interpolation="bilinear",)
+    axes.axis('off')
     st.pyplot(fig=fig,use_container_width=True)
+    st.caption("Word Cloud from Product Reviews")
+    # Test only raw worldcloud
     # st.image(image=wordcloud.to_image(), caption="Word Cloud from Dataset Reviews", use_column_width=True)
-    pass
 
 
-def single_review_analysis():
-    # Build a word cloud generator from all the comments
+def products_timeline(picked=None, product_dict=None):
+    # Build a timeline for the product
+    
     pass
 
 
