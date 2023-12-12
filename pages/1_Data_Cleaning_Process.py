@@ -139,12 +139,22 @@ def test_sentiment(var = 4):
 
 
 
-st.set_page_config(page_title="Data cleaning process", page_icon=":shark:")
-st.markdown("# :green[Data cleaning process]")
-st.sidebar.header("Data cleaning process")
+st.set_page_config(page_title="Data cleaning", page_icon=":shark:")
+st.markdown("# :green[Data cleaning]")
+st.sidebar.header("Data cleaning")
 st.write(
     """
-    This page illustrates the process of cleaning the data. 
+    This page illustrates the process of cleaning the data for our purposes. 
+    The side panel will show checkboxes for each action we took in code blocks. 
+
+    Below shows a custom stopwords input where we can remove certain words from all the reviews. 
+    After that, is an example of sentiment analysis done on the base text and then tokenized text.
+    There is a small difference between using raw texts compared to tokenized text however it is 
+    a small fraction. 
+    
+    A cleaned output can mitigate some issues where symbols or suffixes can 
+    interfere with the model, giving us poor results. Thus it is always optimal to clean the data 
+    before is is used by the model.  
     """
 )
 custom_input = st.text_input(

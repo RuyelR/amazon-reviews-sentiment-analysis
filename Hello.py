@@ -25,16 +25,32 @@ def run():
         page_icon=":handbag:",
     )
 
-    st.write("# Welcome to Streamlit!")
+    st.write("# Welcome to our Sentiment Analysis project!")
 
-    st.sidebar.success("Select a demo above.")
+    st.sidebar.success("Select a page above.")
 
     st.markdown(
         """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
+        The project demonstrates a detailed and thorough process of building a Machine Learning(ML) 
+        application from scratch. To get started please pick a page from the side panel.
+
+        - 1
+        - 2
+        - 3
+        - 4
+
+        
+        Starting at the Data cleaning process, the dataset is organized 
+        and manipulated in ways that best fit our requirements. The process can involve removing 
+        unneeded or missing(N/A) rows and columns, curating stopwords to remove, tokenizing texts,
+        lemmatization of tokens, and even limiting the number of charecters to fit the models parameter.
+
+        Next step for our project was to build the application using the tokens created and the 
+        sentiment analysis model itself. For our purposes, we used the base sentiment analysis 
+        model from Huggingface model pipeline options. A pipeline leverages pre-trained models, 
+        can handle all the complexities of text processing and provide a simple interface for NLP 
+        applications.
+
         """)
 
 
