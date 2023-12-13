@@ -139,6 +139,7 @@ def calculate_middle_date(group):
 
 def products_timeline(picked=None, product_dict=None):
     # Build a timeline for the product
+    st.header("Sentiment distribution over time")
     start, end = product_dict[picked]
     time_df = data_df.loc[start:end, ['Time', 'Score', 'Label']].copy()
 
