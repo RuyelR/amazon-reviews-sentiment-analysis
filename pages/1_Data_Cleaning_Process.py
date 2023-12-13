@@ -14,6 +14,8 @@
 
 import pandas as pd
 import streamlit as st
+import nltk
+nltk.download('punkt')
 from nltk import word_tokenize
 from wordcloud import STOPWORDS
 from transformers import pipeline
