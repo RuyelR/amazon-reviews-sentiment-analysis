@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from urllib.error import URLError
-import altair as alt
-import pandas as pd
 import streamlit as st
 from wordcloud import WordCloud, STOPWORDS
 from sklearn.model_selection import train_test_split
@@ -33,7 +31,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y,random_state=0)
 clf.fit(X_train, y_train)
 predictions = clf.predict(X_test)
 
-text = open('/workspaces/amazon-reviews-sentiment-analysis/pages/randomtext.txt').read()
+text = open('pages/randomtext.txt').read()
 
 def sentiment_dist_plots():
     pass
