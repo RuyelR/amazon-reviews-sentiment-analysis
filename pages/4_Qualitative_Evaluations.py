@@ -33,10 +33,18 @@ predictions = clf.predict(X_test)
 
 text = open('pages/randomtext.txt').read()
 
+def qualitative_evals():
+    sentiment_dist_plots()
+    text_input = st.text_input('Enter a review to turn into wordcloud: ')
+    if len(text_input) > 5:
+        word_cloud_eval(text_input)
+    word_cloud_eval()
+    topic_modeling_eval()
+
 def sentiment_dist_plots():
     pass
 
-def word_cloud_eval(text):
+def word_cloud_eval(text=text):
     st.header("Word Cloud: ")
     st.write("""
              Word clouds can demonstrate prominent factors that are driving a 
@@ -69,6 +77,4 @@ st.write(
     "##### :rainbow[Sentiment Distribution Plot, Word Cloud, Topic Modeling]"
 )
 
-sentiment_dist_plots()
-word_cloud_eval(text)
-topic_modeling_eval()
+qualitative_evals()
