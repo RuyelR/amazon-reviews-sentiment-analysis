@@ -36,8 +36,8 @@ def sa_application():
     f'There are :green[{len(pick_options)}] products.'
     picked = st.radio(label='Pick a product ID', options=pick_options, horizontal=True)
     product_review_stats(picked, product_dict)
+    products_timeline(picked, product_dict)
     wordcloud_tagging(picked, product_dict)
-    pass
 
 # Don't use create_label(). Bulk operation causes 100% CPU usage, then fails.
 def create_label():
@@ -74,7 +74,7 @@ def product_review_stats(picked=None, product_dict=None):
             # Turning epoch time to timestamp
             '### Comment date in median'
             dt_median = dt.datetime.fromtimestamp(median_comment_time)
-            f'### Date: {dt_median.month} / {dt_median.day} / {dt_median.year}'
+            f' Date: {dt_median.month} / {dt_median.day} / {dt_median.year}'
             # f'Time: {dt_median.hour} hour : {dt_median.minute} min : {dt_median.second} sec'
 
         with col2:
@@ -128,11 +128,52 @@ def wordcloud_tagging(picked=None, product_dict=None):
     # Test only raw worldcloud
     # st.image(image=wordcloud.to_image(), caption="Word Cloud from Dataset Reviews", use_column_width=True)
 
+def calculate_middle_date(group):
+    # Need this function to select middle dates from grouped time_dataframe.
+    # Tried and failed: matching median(timestamps) and getting date,
+    # sorting timestamps and getting date, 
+    # sorting date and using median timestamps to get median date, etc...
+    middle_index = len(group) // 2  # Calculate the index of the middle row
+    middle_date = group.iloc[middle_index]['Date']  # Extract the Date value from the middle row
+    return middle_date
 
 def products_timeline(picked=None, product_dict=None):
     # Build a timeline for the product
+    start, end = product_dict[picked]
+    time_df = data_df.loc[start:end, ['Time', 'Score', 'Label']].copy()
+
+    # The following uses datetime to extract m/d/y values.using strftime(string format time) we get string representation.
+    formatted_dates = [dt.datetime.fromtimestamp(epoch).strftime('%m/%Y') for epoch in time_df['Time']]
+    time_df['Date'] = formatted_dates
+    time_df = time_df.sort_values(by='Date', ignore_index=True,ascending=False)
+
+    # Group the DataFrame
+    grouped = time_df.groupby(np.arange(len(time_df))//5)
+    middle_dates = grouped.apply(calculate_middle_date).tolist()
+    positive_counts = grouped['Label'].apply(lambda x: (x == 'POSITIVE').sum()).tolist()
+    negative_counts = grouped['Label'].apply(lambda x: (x == 'NEGATIVE').sum()).tolist()
+    negative_counts_arr = np.array(negative_counts)
+    negative_counts_arr *= -1       # make them negative so that it shows below 0
     
-    pass
+    chart_data = pd.DataFrame(
+   {"Date": middle_dates, "Positives": positive_counts, "Negatives": negative_counts_arr}
+    )
+
+    st.bar_chart(
+        chart_data, x="Date", y=["Positives", "Negatives"], color=["#FF0000", "#0000FF"]  # Optional
+    )
+
+    ### Test bar graph creation  ###
+    # my_arr = np.arange(1,11)
+    ### [::-1] is a slicing notation used to reverse the order of the array.
+    # my_arr_inv = (my_arr*-1)[::-1]
+#     chart_data = pd.DataFrame(
+#    {"col1": list(range(10)), "col2": my_arr, "col3": my_arr_inv}
+#     )
+#     st.bar_chart(
+#         chart_data, x="col1", y=["col2", "col3"], color=["#0000FF", "#FF0000"]  # Optional
+#     )
+    
 
 
 def find_product_indeces():
