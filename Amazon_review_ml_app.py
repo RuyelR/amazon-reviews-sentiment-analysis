@@ -25,7 +25,7 @@ def run():
         page_icon=":handbag:",
     )
 
-    st.write("# Welcome to our Sentiment Analysis project!")
+    st.write("# :rainbow[Welcome to our Sentiment Analysis project!]")
 
     st.sidebar.success("Select a page above.")
 
@@ -34,10 +34,10 @@ def run():
         The project demonstrates a detailed and thorough process of building a Machine Learning(ML) 
         application from scratch. To get started please pick a page from the side panel.
 
-        - 1
-        - 2
-        - 3
-        - 4
+        - :green[Data Cleaning]
+        - :blue[Sentiment Analysis Application]
+        - :orange[Quantitative Evaluations]
+        - :violet[Qualitative Evaluations]
 
         
         Starting at the Data cleaning process, the dataset is organized 
