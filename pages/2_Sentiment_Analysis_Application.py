@@ -114,7 +114,6 @@ def wordcloud_tagging(picked=None, product_dict=None):
         max_words=2000, margin=10,
         random_state=42,
         ).generate(text)
-    
     image_colors = ImageColorGenerator(image=prime_boxes)
     # Make the figure with color option given by the user or default.
     fig, axes = plt.subplots()

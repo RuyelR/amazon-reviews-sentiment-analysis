@@ -12,24 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pandas as pd
+import numpy as np
 from urllib.error import URLError
 import streamlit as st
 from wordcloud import WordCloud, STOPWORDS
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
-from sklearn import svm
 
-# Sentiment Distribution Plots: sentiment balance in datasheet
-# Word_clouds: (+,-,~)catagory. prominent factors driving sentiment
+# Sentiment Distribution Plots: sentiment balance in datasheet  - bar graph with all products
+# Word_clouds: (+,-)catagory. prominent factors driving sentiment
 # Topic Modeling: LDA to id key topics in each sentiment category
-clf = svm.SVC(kernel='linear', C=1, random_state=42)
-iris = datasets.load_iris()
-X = iris.data
-y = iris.target
-class_names = iris.target_names
-X_train, X_test, y_train, y_test = train_test_split(X, y,random_state=0)
-clf.fit(X_train, y_train)
-predictions = clf.predict(X_test)
+
+data_df = pd.read_csv('pages/Reviews_2622.csv')
 
 text = open('pages/randomtext.txt').read()
 
@@ -42,7 +35,28 @@ def qualitative_evals():
     topic_modeling_eval()
 
 def sentiment_dist_plots():
+    st.header('Sentiment Distribution Plot')
+    st.write("""We can see the ratio of positive to negative reviews per product giving 
+             us an insight on how the sentiment is distributed across all products.""")
+    product_df = data_df.loc[:, ['ProductId', 'Label']].copy()
+    grouped = product_df.groupby('ProductId')
+    positive_counts = grouped['Label'].apply(lambda x: (x == 'POSITIVE').sum()).tolist()
+    negative_counts = grouped['Label'].apply(lambda x: (x == 'NEGATIVE').sum()).tolist()
+    negative_counts_arr = np.array(negative_counts)
+    negative_counts_arr *= -1       # make them negative so that it shows below 0
+    product_list = product_df['ProductId'].unique()
+    # st.write([len(x) for x in [positive_counts, negative_counts_arr, product_list]])
+    chart_data = pd.DataFrame(
+   {"Products": product_list, "Positives": positive_counts, "Negatives": negative_counts_arr}
+    )
+    st.bar_chart(
+        chart_data, x="Products", y=["Positives", "Negatives"], color=["#FF0000", "#0000FF"]
+    )
+
+
+def wc_text_by_product():
     pass
+
 
 def word_cloud_eval(text=text):
     st.header("Word Cloud: ")
