@@ -106,7 +106,7 @@ def wordcloud_tagging(picked=None, product_dict=None):
     text = ''.join([sent for sent in text])
     # Form stopwords list for the wordcloud to use
     stopwords = set(STOPWORDS)
-    custom_input = 'br, will'
+    custom_input = 'br, will, <, >'
     custom_stopwords = list(custom_input.split(', '))
     stopwords.update(custom_stopwords)
     # Extract image as array

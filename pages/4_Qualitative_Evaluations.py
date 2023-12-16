@@ -28,10 +28,20 @@ text = open('pages/randomtext.txt').read()
 
 def qualitative_evals():
     sentiment_dist_plots()
-    text_input = st.text_input('Enter a review to turn into wordcloud: ')
-    if len(text_input) > 5:
-        word_cloud_eval(text_input)
-    word_cloud_eval()
+    positive_text, negative_text = wc_text_by_product()
+    st.header("Word Cloud: ")
+    st.write("""
+             Word clouds can demonstrate prominent factors that are driving a 
+             sentiment from a given user review. It shows what the algorithm is 
+             most likely concentrating on when determining sentiment.
+
+             For evaluation purposes we are using the first product (B000CQBZV0) with an even 50/50 positive to negative review.
+             """)
+    col1, col2 = st.columns(2)
+    with col1:
+        word_cloud_eval(positive_text, 'Blues', 'Positive')
+    with col2:
+        word_cloud_eval(negative_text, 'Reds', 'Negative')
     topic_modeling_eval()
 
 def sentiment_dist_plots():
@@ -55,29 +65,28 @@ def sentiment_dist_plots():
 
 
 def wc_text_by_product():
-    pass
+    text_df = data_df.loc[0:100,['ProductId','Text','Label']].copy()
+    grouped = text_df.groupby('Label')
+    # Join the text strings for each group into long strings
+    positive_text = ' '.join(grouped.get_group('POSITIVE')['Text'])
+    negative_text = ' '.join(grouped.get_group('NEGATIVE')['Text'])
+    return positive_text, negative_text
 
-def wc_colormap():
-    pass
 
-def word_cloud_eval(text=text):
-    st.header("Word Cloud: ")
-    st.write("""
-             Word clouds can demonstrate prominent factors that are driving a 
-             sentiment from a given user review. It shows what the algorithm is 
-             most likely concentrating on when determining sentiment.
-             """)
+def word_cloud_eval(text=text, colors_pick=None, caption_txt='Dataset'):
     wc_stopwords = set(STOPWORDS)
     # Set list needs set to update so use []
-    wc_stopwords.update(['yet', 'sentiments'])
+    wc_stopwords.update(['br', '<', '>', 'will'])
     wordcloud = WordCloud(
-        max_words=50, margin=10,
-        random_state=1, stopwords=wc_stopwords,
+        max_words=500, margin=10, max_font_size=40,
+        random_state=1, stopwords=wc_stopwords, colormap=colors_pick,
         ).generate(text)
     # wordcloud.stopwords
-    st.image(image=wordcloud.to_image(), caption="Word Cloud from User Review", use_column_width=True)
+    st.image(image=wordcloud.to_image(),caption=caption_txt+' reviews only', use_column_width=True)
 
 def topic_modeling_eval():
+    st.header('Topic Modeling')
+    st.write('The Latent Dirichlet Allocation (LDA) for Topic Modeling ')
     pass
 
 st.set_page_config(page_title="Qualitative Evaluations", page_icon="📊")
