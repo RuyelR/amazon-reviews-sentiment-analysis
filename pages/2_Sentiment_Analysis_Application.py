@@ -234,7 +234,9 @@ st.sidebar.header("Sentiment Analysis Application")
 st.write(
     """This illustrates our application in action. 
     You can experience how the artificial intelligence model performs sentiment anlysis to hundreds of reviews using your own custom text.
-    You can also explore the models performance on the Amazon Reviews dataset. Using selected products and multiple reviews to choose from. 
+    You can also explore the models performance on the Amazon Reviews dataset. The model we are using is from Huggingface, known as 
+    "distilbert-base-uncased-finetuned-sst-2-english" which is the default for sentiment-analysis model when using the model pipeline.
+    Using selected products and multiple reviews to choose from. 
     """)
 
 
