@@ -27,17 +27,25 @@ sentiment_pipeline = pipeline("sentiment-analysis")
 
 cleaned_tokens = pd.read_csv('pages/tokens.csv')
 
+
 def sa_application():
+    st.header('Sentiment analysis on custom review ')
     user_text_app()
-    product_review_stats()
     st.header("Sentiment analysis from Amazon customer reviews")
     product_dict = find_product_indeces()
     pick_options = list(product_dict.keys())
-    f'There are :green[{len(pick_options)}] products.'
+    st.write(f'There are :green[{len(pick_options)}] products.')
     picked = st.radio(label='Pick a product ID', options=pick_options, horizontal=True)
     product_review_stats(picked, product_dict)
-    products_timeline(picked, product_dict)
-    wordcloud_tagging(picked, product_dict)
+    
+    with st.sidebar:
+        default = False
+        wc_checkbox = st.checkbox(label='Wordcloud', value=default, help='Wordcloud of selected products reviews')
+        timeline_checkbox = st.checkbox(label='Timeline', value=default, help='Timeline of selected products reviews')
+        alert_checkbox = st.checkbox(label='Alert system', value=default, help='Sentiment alert system of selected products reviews')
+    if wc_checkbox: wordcloud_tagging(picked, product_dict)
+    if timeline_checkbox: products_timeline(picked, product_dict)
+    if alert_checkbox: sentiment_alert(picked, product_dict)
 
 # Don't use create_label(). Bulk operation causes 100% CPU usage, then fails.
 def create_label():
@@ -52,13 +60,11 @@ def create_label():
     data_df.to_csv('Reviews_2622.csv', index=False)
 
 
-def user_text_app():
-    st.header('Sentiment analysis on custom review ')
-    review_txt = st.text_input('Write your review:', 'I love this product')
-    'Your Review:'
-    review_txt
-    custom_df = st.dataframe(data=sentiment_pipeline(review_txt), use_container_width=True)
-    
+def user_text_app(custom_key=None):
+    review_txt = st.text_input(label='Write your review:', value='I love this product', key=custom_key)
+    sentiment = sentiment_pipeline(review_txt)
+    st.dataframe(data=sentiment, use_container_width=True)
+    return sentiment
 
 def product_review_stats(picked=None, product_dict=None):
     if picked:
@@ -127,6 +133,7 @@ def wordcloud_tagging(picked=None, product_dict=None):
     # Test only raw worldcloud
     # st.image(image=wordcloud.to_image(), caption="Word Cloud from Dataset Reviews", use_column_width=True)
 
+
 def calculate_middle_date(group):
     # Need this function to select middle dates from grouped time_dataframe.
     # Tried and failed: matching median(timestamps) and getting date,
@@ -136,9 +143,11 @@ def calculate_middle_date(group):
     middle_date = group.iloc[middle_index]['Date']  # Extract the Date value from the middle row
     return middle_date
 
+
 def products_timeline(picked=None, product_dict=None):
     # Build a timeline for the product
-    st.header("Sentiment distribution over time")
+    st.header("Time Series Analysis")
+    st.write('We can plot sentiment trends to identify shifts in sentiment over different time periods')
     start, end = product_dict[picked]
     time_df = data_df.loc[start:end, ['Time', 'Score', 'Label']].copy()
 
@@ -162,18 +171,48 @@ def products_timeline(picked=None, product_dict=None):
     st.bar_chart(
         chart_data, x="Date", y=["Positives", "Negatives"], color=["#FF0000", "#0000FF"]  # Optional
     )
-
-    ### Test bar graph creation  ###
-    # my_arr = np.arange(1,11)
-    ### [::-1] is a slicing notation used to reverse the order of the array.
-    # my_arr_inv = (my_arr*-1)[::-1]
-#     chart_data = pd.DataFrame(
-#    {"col1": list(range(10)), "col2": my_arr, "col3": my_arr_inv}
-#     )
-#     st.bar_chart(
-#         chart_data, x="col1", y=["col2", "col3"], color=["#0000FF", "#FF0000"]  # Optional
-#     )
     
+
+def sentiment_alert(picked=None, product_dict=None):
+    start, end = product_dict[picked]
+    labels = data_df.loc[start:end, 'Label'].value_counts()
+    ratio = labels['POSITIVE'] / labels['NEGATIVE']
+    ratio
+    st.header('Sentiment alert system')
+    st.write("""
+             Based on differing sentiment between the products already existing 
+             sentiment ratio and any new reviews sentiment, we can create an alert 
+             when opinions are actively changing. 
+             
+             Try to write a review for the selected product with opposing sentiment 
+             to what the reviews currently show
+             """)
+    sentiment = user_text_app('sentimentAlert')
+    sentiment = sentiment[0]['label']
+    neutral_case = 'No difference in sentiment.'
+    if ratio < 1:
+        if sentiment == 'POSITIVE':
+            st.success('New reviews are glowing!')
+        else:
+            st.info(neutral_case)
+    else:
+        if sentiment == 'NEGATIVE':
+            st.error(body='New reviews are declining.')
+        else:
+            st.info(neutral_case)
+
+
+def bar_graph_test():
+    ## Test bar graph creation  ###
+    my_arr = np.arange(1,11)
+    ## [::-1] is a slicing notation used to reverse the order of the array.
+    my_arr_inv = (my_arr*-1)[::-1]
+    chart_data = pd.DataFrame(
+   {"col1": list(range(10)), "col2": my_arr, "col3": my_arr_inv}
+    )
+    st.bar_chart(
+        chart_data, x="col1", y=["col2", "col3"], color=["#0000FF", "#FF0000"]  # Optional
+    )
 
 
 def find_product_indeces():
@@ -188,6 +227,7 @@ def find_product_indeces():
             product_ranges[product_id] = (indices[0], indices[-1])
     return product_ranges
 
+
 st.set_page_config(page_title="Sentiment Analysis Application", page_icon="📈")
 st.markdown("# :blue[Sentiment Analysis Application]")
 st.sidebar.header("Sentiment Analysis Application")
@@ -196,5 +236,6 @@ st.write(
     You can experience how the artificial intelligence model performs sentiment anlysis to hundreds of reviews using your own custom text.
     You can also explore the models performance on the Amazon Reviews dataset. Using selected products and multiple reviews to choose from. 
     """)
+
 
 sa_application()

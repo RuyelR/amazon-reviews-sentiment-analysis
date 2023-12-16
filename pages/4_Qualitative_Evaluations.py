@@ -57,6 +57,8 @@ def sentiment_dist_plots():
 def wc_text_by_product():
     pass
 
+def wc_colormap():
+    pass
 
 def word_cloud_eval(text=text):
     st.header("Word Cloud: ")
