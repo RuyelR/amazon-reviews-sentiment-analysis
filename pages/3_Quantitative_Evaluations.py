@@ -36,67 +36,51 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 df = pd.read_csv('pages/Reviews_2622.csv')
 
-model_path="../models/model.pkl"
-transformer_path="../models/transformer.pkl"
+model_path="models/model.pkl"
+transformer_path="models/transformer.pkl"
 
 # Use Loaded Model
-loaded_model = pickle.load(open(model_path, 'rb'))
+clf = pickle.load(open(model_path, 'rb'))
 loaded_transformer = pickle.load(open(transformer_path, 'rb'))
 
 
 def quantitative_eval():
+    # model_save()
+    test_review = st.text_input(label='Input a sample text', value='This is a very good product',)
+    'The text being tested:',test_review
+    test_features=loaded_transformer.transform([test_review])
+    preds = clf.predict(test_features)
+    'The Logistical Regression models prediction: '+preds
     # cross_validation_eval(clf, X, y)
     # statistical_significance_eval()
     # confusion_matrix_eval(clf, X, y, class_names)
     # multi_metric_eval(y_test, predictions)
 
-    model_save()
-    # print("\nAccuracy={0}; MRR={1}".format(accuracy,mrr_at_k))
-
-    test_features=loaded_transformer.transform(["President Trump AND THE impeachment story !!!"])
-    get_top_k_predictions(loaded_model,test_features,2)
+    pass
 
 def model_save():
-    field = 'Text'
-    top_k=3
-
-    model,transformer=train_model(df,field=field,top_k=top_k)
+    model,transformer=train_model(df,field='Text')
     # we need to save both the transformer -> to encode a document and the model itself to make predictions based on the weight vectors 
     pickle.dump(model,open(model_path, 'wb'))
     pickle.dump(transformer,open(transformer_path,'wb'))
 
 
 
-def extract_features(df,field,training_data,testing_data):
+def extract_features(field,training_data,testing_data):
     # TF-IDF BASED FEATURE REPRESENTATION
     tfidf_vectorizer=TfidfVectorizer(use_idf=True, max_df=0.95)
     tfidf_vectorizer.fit_transform(training_data[field].values)
-    
+    # feature_names = tfidf_vectorizer.get_feature_names_out()
+
     train_feature_set=tfidf_vectorizer.transform(training_data[field].values)
     test_feature_set=tfidf_vectorizer.transform(testing_data[field].values)
     
     return train_feature_set,test_feature_set,tfidf_vectorizer
-
-def get_top_k_predictions(model,X_test,k):
-    
-    # get probabilities instead of predicted labels, since we want to collect top 3
-    probs = model.predict_proba(X_test)
-
-    # GET TOP K PREDICTIONS BY PROB - note these are just index
-    best_n = np.argsort(probs, axis=1)[:,-k:]
-    
-    # GET CATEGORY OF PREDICTIONS
-    preds=[[model.classes_[predicted_cat] for predicted_cat in prediction] for prediction in best_n]
-    
-    preds=[ item[::-1] for item in preds]
-    
-    return preds
    
     
-def train_model(df,field="Text",top_k=3):
+def train_model(df,field="Text"):
     
     logging.info("Starting model training...")
-    
     # GET A TRAIN TEST SPLIT (set seed for consistent results)
     training_data, testing_data = train_test_split(df,random_state = 2000,)
 
@@ -105,18 +89,19 @@ def train_model(df,field="Text",top_k=3):
     Y_test=testing_data['Label'].values
      
     # GET FEATURES
-    X_train,X_test,feature_transformer=extract_features(df,field,training_data,testing_data)
+    X_train,X_test,feature_transformer=extract_features(field,training_data,testing_data)
 
     # INIT LOGISTIC REGRESSION CLASSIFIER
     logging.info("Training a Logistic Regression Model...")
-    scikit_log_reg = LogisticRegression(verbose=1, solver='liblinear',random_state=0, C=5, penalty='l2',max_iter=1000)
+    scikit_log_reg = LogisticRegression(max_iter=1000)
     model=scikit_log_reg.fit(X_train,Y_train)
 
-    # GET TOP K PREDICTIONS
-    preds=get_top_k_predictions(model,X_test,top_k)
+    # GET PREDICTIONS
+    preds = model.predict(X_test)
     
     # GET PREDICTED VALUES AND GROUND TRUTH INTO A LIST OF LISTS - for ease of evaluation
     eval_items=collect_preds(Y_test,preds)
+    # st.write(eval_items)
 
     logging.info("Done training and evaluation.")
 
