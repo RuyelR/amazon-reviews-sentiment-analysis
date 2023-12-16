@@ -44,6 +44,8 @@ clf = pickle.load(open(model_path, 'rb'))
 loaded_transformer = pickle.load(open(transformer_path, 'rb'))
 
 
+
+
 def quantitative_eval():
     # model_save()
     test_review = st.text_input(label='Input a sample text', value='This is a very good product',)
@@ -51,10 +53,16 @@ def quantitative_eval():
     test_features=loaded_transformer.transform([test_review])
     preds = clf.predict(test_features)
     'The Logistical Regression models prediction: '+preds
-    # cross_validation_eval(clf, X, y)
+
+    X= df['Text']
+    y = df['Label']
+    X = loaded_transformer.transform(X)
+    class_names = ['POSITIVE', 'NEGATIVE']
+    cross_validation_eval(clf, X, y)
     # statistical_significance_eval()
-    # confusion_matrix_eval(clf, X, y, class_names)
-    # multi_metric_eval(y_test, predictions)
+    confusion_matrix_eval(clf, X, y, class_names)
+    predictions = clf.predict(X)
+    multi_metric_eval(y, predictions)
 
     pass
 
