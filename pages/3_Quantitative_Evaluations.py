@@ -14,7 +14,6 @@
 import logging
 import pickle
 import pandas as pd
-import numpy as np
 import streamlit as st
 from sklearn.model_selection import cross_val_score 
 from sklearn.metrics import ConfusionMatrixDisplay
@@ -48,11 +47,10 @@ loaded_transformer = pickle.load(open(transformer_path, 'rb'))
 
 def quantitative_eval():
     # model_save()
-    test_review = st.text_input(label='Input a sample text', value='This is a very good product',)
-    'The text being tested:',test_review
+    test_review = st.text_input(label='Input a sample text to try the Logistical Regression model we are evaluating in this demo', value='This is a very good product',)
     test_features=loaded_transformer.transform([test_review])
     preds = clf.predict(test_features)
-    'The Logistical Regression models prediction: '+preds
+    'The Logistical Regression model predicts: '+ preds
 
     X= df['Text']
     y = df['Label']
