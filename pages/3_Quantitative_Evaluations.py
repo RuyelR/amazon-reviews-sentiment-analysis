@@ -127,7 +127,7 @@ def round_percent(num):
     return round(num*100, 2)
 
 def cross_validation_eval(clf, X, y):
-    st.header('❎ Cross Validation Score:')
+    st.header('🔀 Cross Validation Score:')
     cv_option=[2,3,4,5,6,]
     cv_pick = st.select_slider(label='Number of CV count',options=cv_option,value=4)
     scores = cross_val_score(clf, X, y, cv=cv_pick)
