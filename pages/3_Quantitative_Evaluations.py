@@ -121,8 +121,6 @@ def collect_preds(Y_test,Y_preds):
     return pred_gold_list
 
 
-
-
 def round_percent(num):
     return round(num*100, 2)
 

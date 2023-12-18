@@ -15,6 +15,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+from utils import show_code
 from wordcloud import WordCloud, STOPWORDS
 
 # Sentiment Distribution Plots: sentiment balance in datasheet  - bar graph with all products
@@ -40,6 +41,11 @@ def qualitative_evals():
     with col2:
         word_cloud_eval(negative_text, 'Reds', 'Negative')
     # topic_modeling_eval()
+    
+    show_code(sentiment_dist_plots, 'Sentiment Distribution Plot')
+    show_code(word_cloud_eval, 'Word Cloud Evaluation')
+    show_code(wc_text_by_product, 'Text used in wordcloud')
+
 
 def sentiment_dist_plots():
     st.header('📊 Sentiment Distribution Plot')
