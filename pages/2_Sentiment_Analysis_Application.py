@@ -178,7 +178,6 @@ def sentiment_alert(picked=None, product_dict=None):
     start, end = product_dict[picked]
     labels = data_df.loc[start:end, 'Label'].value_counts()
     ratio = labels['POSITIVE'] / labels['NEGATIVE']
-    ratio
     st.header('Sentiment alert system')
     st.write("""
              Based on differing sentiment between the products already existing 
