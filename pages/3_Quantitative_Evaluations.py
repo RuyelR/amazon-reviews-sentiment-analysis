@@ -180,10 +180,15 @@ def multi_metric_eval(y_test, predictions):
 st.set_page_config(page_title="Quantitative Evaluations", page_icon="📈")
 st.markdown("# :blue[Quantitative Evaluations]")
 st.sidebar.header("Quantitative Evaluations")
-st.write(
-    """This demo illustrates a combination of Quantitative Evaluations. 
-    The Algorithms performance can be measured using the following quantitative metrics:
-    """)
+st.write("""
+         This demo illustrates a combination of Quantitative Evaluations. We used
+         a Logistical Regression model that produces a probability output 
+         for TF-IDF transformerd texts to fit into the preset labels. 
+         Our model uses bilinear regression since our preset labels are only 
+         positive and negative.
+         
+         The Algorithms performance can be measured using the following quantitative metrics:
+         """)
 st.write(    
     "##### :rainbow[Accuracy, Precision, Recall, F1 Score, Cross-Validation, Confusion Matrix, and Statistical Significance Testing]"
 )

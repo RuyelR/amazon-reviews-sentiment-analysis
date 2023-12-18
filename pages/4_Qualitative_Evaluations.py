@@ -14,7 +14,6 @@
 
 import pandas as pd
 import numpy as np
-from urllib.error import URLError
 import streamlit as st
 from wordcloud import WordCloud, STOPWORDS
 
@@ -23,8 +22,6 @@ from wordcloud import WordCloud, STOPWORDS
 # Topic Modeling: LDA to id key topics in each sentiment category
 
 data_df = pd.read_csv('pages/Reviews_2622.csv')
-
-text = open('pages/randomtext.txt').read()
 
 def qualitative_evals():
     sentiment_dist_plots()
@@ -73,7 +70,7 @@ def wc_text_by_product():
     return positive_text, negative_text
 
 
-def word_cloud_eval(text=text, colors_pick=None, caption_txt='Dataset'):
+def word_cloud_eval(text, colors_pick=None, caption_txt='Dataset'):
     wc_stopwords = set(STOPWORDS)
     # Set list needs set to update so use []
     wc_stopwords.update(['br', '<', '>', 'will'])

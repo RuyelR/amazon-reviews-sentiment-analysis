@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import streamlit as st
-import pandas as pd
 from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
@@ -22,7 +21,7 @@ LOGGER = get_logger(__name__)
 def run():
     st.set_page_config(
         page_title="Sentiment Analysis",
-        page_icon=":handbag:",
+        page_icon=":👋:",
     )
 
     st.write("# :rainbow[Welcome to our Sentiment Analysis project!]")
@@ -41,15 +40,25 @@ def run():
 
         
         Starting at the Data cleaning process, the dataset is organized 
-        and manipulated in ways that best fit our requirements. The process can involve removing 
-        unneeded or missing(N/A) rows and columns, curating stopwords to remove, tokenizing texts,
-        lemmatization of tokens, and even limiting the number of charecters to fit the models parameter.
+        and manipulated in ways that best fit our requirements. The process can 
+        involve removing unneeded or missing(N/A) rows and columns, curating 
+        stopwords to remove from texts, tokenizing the texts,lemmatization 
+        of those tokens, and even limiting the number of charecters per text 
+        to fit the models parameter.
 
-        Next step for our project was to build the application using the tokens created and the 
-        sentiment analysis model itself. For our purposes, we used the base sentiment analysis 
-        model from Huggingface model pipeline options. A pipeline leverages pre-trained models, 
-        can handle all the complexities of text processing and provide a simple interface for NLP 
-        applications.
+        For our application, we used the base sentiment analysis model from 🤗 
+        Huggingface model pipeline. A pipeline leverages pre-trained models, can handle 
+        all the complexities of text processing and provide a simple interface for NLP 
+        applications. We used the general sentiment analysis model to determine the 
+        sentiment of our unlabled data to create a labeled dataset.
+
+        Next step for our project was to build the sentiment analysis model itself 
+        using the tokens and the labels created previously. We created a custom 
+        transformer that produced TF-IDF based feature representation of the texts.
+        The transformed text is then fed into our Sentiment analysis model. 
+        We demonstrate our custom model in the Quantitative Evaluations page 
+        comparing its performance to the 🤗 Huggingface models output.
+        . 
 
         """)
 
