@@ -15,6 +15,7 @@ import logging
 import pickle
 import pandas as pd
 import streamlit as st
+from utils import show_code
 from sklearn.model_selection import cross_val_score 
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import f1_score
@@ -61,12 +62,17 @@ def quantitative_eval():
     confusion_matrix_eval(clf, X, y, class_names)
     predictions = clf.predict(X)
     multi_metric_eval(y, predictions)
+    
+    st.write('### Code for how the model is built shown below.')
+    show_code(extract_features, 'Text TF-IDF feature transformer')
+    show_code(train_model, 'Training the model')
+    show_code(model_save, 'Saving model and transformer')
 
-    pass
+    show_code(multi_metric_eval, 'Multi metric code')
 
 def model_save():
     model,transformer=train_model(df,field='Text')
-    # we need to save both the transformer -> to encode a document and the model itself to make predictions based on the weight vectors 
+    # we need to save both the transformer and model
     pickle.dump(model,open(model_path, 'wb'))
     pickle.dump(transformer,open(transformer_path,'wb'))
 
