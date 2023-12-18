@@ -26,7 +26,7 @@ data_df = pd.read_csv('pages/Reviews_2622.csv')
 def qualitative_evals():
     sentiment_dist_plots()
     positive_text, negative_text = wc_text_by_product()
-    st.header("Word Cloud: ")
+    st.header("🌦️ Word Cloud: ")
     st.write("""
              Word clouds can demonstrate prominent factors that are driving a 
              sentiment from a given user review. It shows what the algorithm is 
@@ -39,10 +39,10 @@ def qualitative_evals():
         word_cloud_eval(positive_text, 'Blues', 'Positive')
     with col2:
         word_cloud_eval(negative_text, 'Reds', 'Negative')
-    topic_modeling_eval()
+    # topic_modeling_eval()
 
 def sentiment_dist_plots():
-    st.header('Sentiment Distribution Plot')
+    st.header('📊 Sentiment Distribution Plot')
     st.write("""We can see the ratio of positive to negative reviews per product giving 
              us an insight on how the sentiment is distributed across all products.""")
     product_df = data_df.loc[:, ['ProductId', 'Label']].copy()
@@ -86,7 +86,7 @@ def topic_modeling_eval():
     st.write('The Latent Dirichlet Allocation (LDA) for Topic Modeling ')
     pass
 
-st.set_page_config(page_title="Qualitative Evaluations", page_icon="📊")
+st.set_page_config(page_title="Qualitative Evaluations", page_icon="📀")
 st.markdown("# :green[Qualitative Evaluations]")
 st.sidebar.header("Qualitative Evaluations")
 st.write(

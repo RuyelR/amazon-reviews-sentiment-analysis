@@ -177,7 +177,7 @@ def multi_metric_eval(y_test, predictions):
     )
 
 
-st.set_page_config(page_title="Quantitative Evaluations", page_icon="📈")
+st.set_page_config(page_title="Quantitative Evaluations", page_icon="📶")
 st.markdown("# :blue[Quantitative Evaluations]")
 st.sidebar.header("Quantitative Evaluations")
 st.write("""
