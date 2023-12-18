@@ -39,7 +39,7 @@ def sa_application():
     product_review_stats(picked, product_dict)
     
     with st.sidebar:
-        default = False
+        default = True
         wc_checkbox = st.checkbox(label='Wordcloud', value=default, help='Wordcloud of selected products reviews')
         timeline_checkbox = st.checkbox(label='Timeline', value=default, help='Timeline of selected products reviews')
         alert_checkbox = st.checkbox(label='Alert system', value=default, help='Sentiment alert system of selected products reviews')
@@ -64,6 +64,7 @@ def user_text_app(custom_key=None):
     review_txt = st.text_input(label='Write your review:', value='I love this product', key=custom_key)
     sentiment = sentiment_pipeline(review_txt)
     st.dataframe(data=sentiment, use_container_width=True)
+
     return sentiment
 
 def product_review_stats(picked=None, product_dict=None):
