@@ -28,6 +28,10 @@ def run():
 
     st.sidebar.success("Select a page above.")
 
+    st.markdown("""TLDR; 
+                
+                You can use the Sentiment Analysis Application 
+                page on the sidebar to start exploring the app concept.""")
     st.markdown(
         """
         The project demonstrates a detailed and thorough process of building a Machine Learning(ML) 

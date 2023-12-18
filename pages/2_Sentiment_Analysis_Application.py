@@ -17,6 +17,7 @@ import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
 from PIL import Image
+from utils import show_code
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from transformers import pipeline
 
@@ -43,9 +44,17 @@ def sa_application():
         wc_checkbox = st.checkbox(label='Wordcloud', value=default, help='Wordcloud of selected products reviews')
         timeline_checkbox = st.checkbox(label='Timeline', value=default, help='Timeline of selected products reviews')
         alert_checkbox = st.checkbox(label='Alert system', value=default, help='Sentiment alert system of selected products reviews')
+        showCode = st.toggle(label='Show code', value=False)
+
     if wc_checkbox: wordcloud_tagging(picked, product_dict)
     if timeline_checkbox: products_timeline(picked, product_dict)
     if alert_checkbox: sentiment_alert(picked, product_dict)
+    if showCode: 
+        show_code(create_label, 'Label creation process')
+        show_code(user_text_app, 'User review SA')
+        show_code(product_review_stats, 'Product Review stats')
+        show_code(products_timeline, 'Product timeline')
+        show_code(sentiment_alert, 'Sentiment Alert')
 
 # Don't use create_label(). Bulk operation causes 100% CPU usage, then fails.
 def create_label():
