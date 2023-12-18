@@ -58,8 +58,6 @@ def run():
         The transformed text is then fed into our Sentiment analysis model. 
         We demonstrate our custom model in the Quantitative Evaluations page 
         comparing its performance to the 🤗 Huggingface models output.
-        . 
-
         """)
 
 

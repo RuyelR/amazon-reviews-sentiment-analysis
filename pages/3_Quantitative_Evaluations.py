@@ -127,7 +127,7 @@ def round_percent(num):
     return round(num*100, 2)
 
 def cross_validation_eval(clf, X, y):
-    st.header('Cross Validation Score:')
+    st.header('❎ Cross Validation Score:')
     cv_option=[2,3,4,5,6,]
     cv_pick = st.select_slider(label='Number of CV count',options=cv_option,value=4)
     scores = cross_val_score(clf, X, y, cv=cv_pick)
@@ -138,12 +138,12 @@ def statistical_significance_eval():
     st.header("Statistical Significance:")
 
 def confusion_matrix_eval(clf, X, y, cls_names):
-    st.header('Confusion Matrix:')
+    st.header('✅ Confusion Matrix:')
     disp = ConfusionMatrixDisplay.from_estimator(clf,X,y,display_labels=cls_names,cmap='Blues')
     st.pyplot(disp.figure_)
 
 def multi_metric_eval(y_test, predictions):
-    st.header("Multiple Metrics:")
+    st.header("⚖️ Multiple Metrics:")
     avarage_param = ['micro', 'macro', 'weighted']
     accuracy = accuracy_score(y_test, predictions)
     st.write("#### Accuracy score: ", round_percent(accuracy)) # Closer to 1(100) is better
