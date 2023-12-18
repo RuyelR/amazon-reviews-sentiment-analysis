@@ -29,9 +29,9 @@ cleaned_tokens = pd.read_csv('pages/tokens.csv')
 
 
 def sa_application():
-    st.header('Sentiment analysis on custom review ')
+    st.header('🤗 Sentiment analysis on custom review')
     user_text_app()
-    st.header("Sentiment analysis from Amazon customer reviews")
+    st.header("📦 Sentiment analysis from Amazon customer reviews")
     product_dict = find_product_indeces()
     pick_options = list(product_dict.keys())
     st.write(f'There are :green[{len(pick_options)}] products.')
@@ -101,7 +101,7 @@ def product_review_stats(picked=None, product_dict=None):
 def wordcloud_tagging(picked=None, product_dict=None):
     # Build a word cloud generator from all the comments
     start, end = product_dict[picked]
-    st.header("Wordcloud of all reviews: ")
+    st.header("🌥️ Wordcloud of all reviews: ")
     # Create one long text from all reviews
     text = data_df.loc[start:end, 'Text']
     text = ''.join([sent for sent in text])
@@ -147,7 +147,7 @@ def calculate_middle_date(group):
 
 def products_timeline(picked=None, product_dict=None):
     # Build a timeline for the product
-    st.header("Time Series Analysis")
+    st.header("🕝 Time Series Analysis")
     st.write('We can plot sentiment trends to identify shifts in sentiment over different time periods')
     start, end = product_dict[picked]
     time_df = data_df.loc[start:end, ['Time', 'Score', 'Label']].copy()
@@ -178,7 +178,7 @@ def sentiment_alert(picked=None, product_dict=None):
     start, end = product_dict[picked]
     labels = data_df.loc[start:end, 'Label'].value_counts()
     ratio = labels['POSITIVE'] / labels['NEGATIVE']
-    st.header('Sentiment alert system')
+    st.header('⚠️ Sentiment alert system')
     st.write("""
              Based on differing sentiment between the products already existing 
              sentiment ratio and any new reviews sentiment, we can create an alert 
@@ -192,12 +192,12 @@ def sentiment_alert(picked=None, product_dict=None):
     neutral_case = 'No difference in sentiment.'
     if ratio < 1:
         if sentiment == 'POSITIVE':
-            st.success('New reviews are glowing!')
+            st.success('New reviews are glowing!',icon='📈')
         else:
             st.info(neutral_case)
     else:
         if sentiment == 'NEGATIVE':
-            st.error(body='New reviews are declining.')
+            st.error(body='New reviews are declining.', icon='📉')
         else:
             st.info(neutral_case)
 
@@ -228,13 +228,13 @@ def find_product_indeces():
     return product_ranges
 
 
-st.set_page_config(page_title="Sentiment Analysis Application", page_icon="📈")
+st.set_page_config(page_title="Sentiment Analysis Application ", page_icon="📈")
 st.markdown("# :blue[Sentiment Analysis Application]")
 st.sidebar.header("Sentiment Analysis Application")
 st.write(
     """This illustrates our application in action. 
     You can experience how the artificial intelligence model performs sentiment anlysis to hundreds of reviews using your own custom text.
-    You can also explore the models performance on the Amazon Reviews dataset. The model we are using is from Huggingface, known as 
+    You can also explore the models performance on the Amazon Reviews dataset. The model we are using is from 🤗Huggingface, known as 
     "distilbert-base-uncased-finetuned-sst-2-english" which is the default for sentiment-analysis model when using the model pipeline.
     Using selected products and multiple reviews to choose from. 
     """)
