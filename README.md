@@ -1,4 +1,4 @@
-# Welcome to amazon1
+# Welcome to our Feature-rich Sentiment Analysis app
 
 This is the app you get when you run `streamlit hello`, extracted as its own app.
 
